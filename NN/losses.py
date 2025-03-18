@@ -41,11 +41,9 @@ class BinaryCrossEntropy(Loss):
 
 class CategoricalCrossEntropy(Loss):
     def base(self, y_true: ndarray, y_pred: ndarray) -> float:
-        """Computes categorical cross-entropy loss."""
         return -np.sum(y_true * np.log(y_pred + 1e-9)) / y_true.shape[0]
 
     def grad(self, y_true: ndarray, y_pred: ndarray) -> ndarray:
-        """Computes gradient of categorical cross-entropy loss."""
         return -y_true / (y_pred + 1e-9) / y_true.shape[0]
 
     def __repr__(self):
