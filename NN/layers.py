@@ -68,20 +68,18 @@ class Softmax(Activation):
             exps = np.exp(shifted)
             return exps / np.sum(exps, axis=-1, keepdims=True)
 
-        # The grad function is not used in backward for Softmax; we provide a dummy.
         def grad(x):
-            return x  # dummy, not used
+            return x 
 
         super().__init__(stable_softmax, grad)
 
     def backward(self, prev_grad: np.ndarray) -> np.ndarray:
         s = self.func(self.input)
         if s.ndim == 1:
-            # Single sample case: compute the Jacobian matrix and apply to prev_grad
             jacobian = np.diag(s) - np.outer(s, s)
             return jacobian.dot(prev_grad)
         else:
-            # Batch case: compute jacobian for each sample
+
             grad_input = np.empty_like(s)
             for i in range(s.shape[0]):
                 jacobian = np.diag(s[i]) - np.outer(s[i], s[i])
